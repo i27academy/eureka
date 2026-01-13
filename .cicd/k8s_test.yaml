@@ -1,0 +1,38 @@
+# Deployment file
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: i27-eureka-test-app
+  labels:
+    app: i27-eureka-test-app
+spec:
+  replicas: 1 
+  selector:
+    matchLabels:
+      app: i27-eureka-test-app
+  template:
+    metadata:
+      labels:
+        app: i27-eureka-test-app
+    spec:
+      containers:
+      - name: i27-eureka-container
+        image: DIT # this image will be replace with the actual image through shared lib in run time 
+        ports:
+        - containerPort: 8761
+---
+# Service file
+apiVersion: v1
+kind: Service
+metadata:
+  name: i27-eureka-service
+  labels:
+    app: i27-eureka-test-app 
+spec:
+  type: NodePort
+  selector:
+    app: i27-eureka-test-app
+  ports:
+    - protocol: TCP
+      port: 80 # Service port
+      targetPort: 8761 # Container port
